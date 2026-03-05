@@ -1,13 +1,11 @@
 import webbrowser
 import os
+from flask import Flask, render_template_string
 
-
+app = Flask(__name__)
 
 phrase = "«Как ты думаешь, когда человек умирает? Когда пуля из пистолета пронзает его сердце? Нет. Когда на него нападает неизлечимая болезнь? Нет. Когда он съедает суп из смертельно ядовитых грибов? Нет. Человек умирает, когда люди его забывают!»"
 author = "доктором Хирилюком"
-
-
-
 
 html_code = f"""
 <!DOCTYPE html>
@@ -46,17 +44,25 @@ html_code = f"""
 </html>
 """
 
+@app.route('/')
+def index():
+    return render_template_string(html_code)
 
+def create_and_open_html():
+    """Создает HTML файл и открывает его в браузере"""
+    file_name = "expression.html"
+    with open(file_name, "w", encoding="utf-8") as file:
+        file.write(html_code)
+    
+    full_path = os.path.abspath(file_name)
+    webbrowser.open('file://' + full_path)
+    print("Файл создан и открыт в браузере!")
 
-
-file_name = "expression.html"
-with open(file_name, "w", encoding="utf-8") as file:
-    file.write(html_code)
-
-
-
-
-full_path = os.path.abspath(file_name)
-webbrowser.open('file://' + full_path)
-
-print("Файл создан и открыт в браузере!")
+if __name__ == '__main__':
+    # Запускаем Flask сервер
+    print("Запуск Flask сервера...")
+    print("Откройте браузер и перейдите по адресу: http://127.0.0.1:5000")
+    app.run(debug=True)
+    
+    # Также создаем HTML файл и открываем его (опционально)
+    # create_and_open_html()
